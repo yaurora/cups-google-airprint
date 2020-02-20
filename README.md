@@ -1,5 +1,6 @@
 # cups-google-airprint
 # cups with google cloud print and airprint enabled
+Based on the phusion/baseimage version 0.11.
 
 Due to fw issues some user may not be able to use the cloud mode of "google cloud print (gcp)", so only local mode is enabled by default. However, this can be easily changed via config file.
 
