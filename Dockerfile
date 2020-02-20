@@ -1,5 +1,5 @@
 From phusion/baseimage:0.11
-MAINTAINER y-aurora
+MAINTAINER yaurora
 
 ENV HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" DEBIAN_FRONTEND="noninteractive" TERM="xterm"
 
