@@ -49,4 +49,4 @@ docker run -d --name="airprint" \
 -e "CUPS_USER_PASSWORD"="admin" \
 -v /volume1/docker/airprint/config:/config \
 -v /dev/bus/usb:/dev/bus/usb \
-y-aurora/cups-google-airprint
+yaurora/cups-google-airprint
