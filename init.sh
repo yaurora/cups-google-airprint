@@ -1,5 +1,5 @@
 mkdir -p /etc/my_init.d
-cp /tmp/init.sh /opt/
+#cp /tmp/init.sh /opt/
 cp /tmp/airprint-generate.py /opt/
 # include config files
 cat <<'EOT' >/etc/my_init.d/config.sh
@@ -26,8 +26,8 @@ if [ -n "$CUPS_USER_ADMIN" ]; then
     useradd $CUPS_USER_ADMIN --system -G root,lpadmin --no-create-home --password $(mkpasswd $CUPS_USER_PASSWORD)
   fi
 fi
-exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf
 cupsctl --remote-admin --remote-any --share-printers
+exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf
 EOT
 chmod +x /etc/service/cups/run
 
@@ -64,7 +64,7 @@ mkdir -p /run/avahi-daemon
 chown -R avahi:avahi /run/avahi-daemon/
 service dbus restart
 rm -f /run/avahi-daemon/pid
-avahi-daemon -D --no-chroot
+exec avahi-daemon -D --no-chroot
 EOT
 chmod +x /etc/my_init.d/avahi.sh
 
@@ -73,14 +73,11 @@ mkdir -p /etc/service/gcp
 cat <<'EOT' >/etc/service/gcp/run
 #!/bin/sh
 rm -f /tmp/cloud-print-connector-monitor.sock
-if [ ! -f "/config/cloudprint/gcp-cups-connector.config.json" ]; then
-	cd /config/cloudprint && gcp-connector-util init --local-printing-enable --cloud-printing-enable=false
-fi
-if [ -r /config/cloudprint/gcp-cups-connector.config.json ]
+if [ ! -f /config/gcp/gcp-cups-connector.config.json ]
   then
-    exec gcp-cups-connector --config-filename /config/cloudprint/gcp-cups-connector.config.json
-  else
-    exec gcp-cups-connector
+    cd /config/gcp
+    gcp-connector-util init --local-printing-enable --cloud-printing-enable=false
 fi
+exec gcp-cups-connector --config-filename /config/gcp/gcp-cups-connector.config.json
 EOT
 chmod +x /etc/service/gcp/run
