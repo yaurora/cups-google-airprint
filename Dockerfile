@@ -20,11 +20,8 @@ RUN apt-get update -qy \
 	inotify-tools \
 	libcups2 \
 	libavahi-client3 \
-    libsnmp30 \
-	printer-driver-all \
-	printer-driver-hpcups \
-	printer-driver-hpijs \
-	printer-driver-pxljr \
+	libsnmp30 \
+	hplip \
 	python-cups \
 	python \
 	whois \	
