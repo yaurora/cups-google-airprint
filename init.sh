@@ -26,10 +26,18 @@ if [ -n "$CUPS_USER_ADMIN" ]; then
     useradd $CUPS_USER_ADMIN --system -G root,lpadmin --no-create-home --password $(mkpasswd $CUPS_USER_PASSWORD)
   fi
 fi
-cupsctl --remote-admin --remote-any --share-printers
+# cupsctl --remote-admin --remote-any --share-printers
 exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf
 EOT
 chmod +x /etc/service/cups/run
+
+
+cat <<'EOT' >/etc/service/cups/finish
+#!/bin/sh
+cupsctl --remote-admin --remote-any --share-printers
+EOT
+chmod +x /etc/service/cups/finish
+
 
 
 # Add AirPrint to runit
