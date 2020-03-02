@@ -21,7 +21,6 @@ RUN apt-get update -qy \
 	libcups2 \
 	libavahi-client3 \
 	libsnmp30 \
-	hplip \
 	python-cups \
 	python \
 	whois \	
