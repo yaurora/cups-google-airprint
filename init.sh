@@ -4,7 +4,7 @@ cp /tmp/airprint-generate.py /opt/
 # include config files
 cat <<'EOT' >/etc/my_init.d/config.sh
 #!/bin/bash
-mkdir -p /config/cups /config/spool /config/logs /config/cache /config/cups/ssl /config/cups/ppd /config/cloudprint /config/avahi
+mkdir -p /config/cups /config/spool /config/logs /config/cache /config/cups/ssl /config/cups/ppd /config/gcp /config/avahi
 
 # Copy missing config files
 cd /etc/cups
@@ -26,17 +26,11 @@ if [ -n "$CUPS_USER_ADMIN" ]; then
     useradd $CUPS_USER_ADMIN --system -G root,lpadmin --no-create-home --password $(mkpasswd $CUPS_USER_PASSWORD)
   fi
 fi
-# cupsctl --remote-admin --remote-any --share-printers
-exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf
+#cupsctl --remote-admin --remote-any --share-printers
+#exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf
+exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf -s /config/cups/cups-files.conf
 EOT
 chmod +x /etc/service/cups/run
-
-
-cat <<'EOT' >/etc/service/cups/finish
-#!/bin/sh
-cupsctl --remote-admin --remote-any --share-printers
-EOT
-chmod +x /etc/service/cups/finish
 
 
 
@@ -48,7 +42,7 @@ cat <<'EOT' > /etc/service/airprint/run
 while [[ $(curl -sk localhost:631 >/dev/null; echo $?) -ne 0 ]]; do
   sleep 1
 done
-
+cupsctl --remote-admin --remote-any --share-printers
 /opt/airprint-generate.py -d /config/avahi
 
 inotifywait -m /config/cups/ppd -e create -e moved_to -e close_write|

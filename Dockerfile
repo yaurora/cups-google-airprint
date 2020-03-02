@@ -16,11 +16,11 @@ RUN apt-get update -qy \
 	cups-pdf \
 	cups-filters \
 	google-cloud-print-connector \
-	hplip \
 	inotify-tools \
 	libcups2 \
 	libavahi-client3 \
 	libsnmp30 \
+	hplip \
 	python-cups \
 	python \
 	whois \	

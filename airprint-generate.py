@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 """
 Copyright (c) 2010 Timothy J Fontaine <tjfontaine@atxconsulting.com>
 
