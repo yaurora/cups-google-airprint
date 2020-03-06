@@ -29,13 +29,13 @@ Due to fw issues some user may not be able to use the cloud mode of "google clou
 Default configuration file for gcp is generated in /config/gcp/gcp-cups-connector.config.json. If you exposed a local folder to config folder to the container, for instance in my case, /volume1/docker/airprint/config, then the file is located in /volume1/docker/airprint/config/gcp/gcp-cups-connector.config.json.
 
 Just change it from:
-
+```json
 { "local_printing_enable": true, "cloud_printing_enable": false, "log_level": "INFO", "log_file_name": "/tmp/cloud-print-connector" }
-
+```
 to
-
+```json
 { "local_printing_enable": true, "cloud_printing_enable": true, "log_level": "INFO", "log_file_name": "/tmp/cloud-print-connector" }
-
+```
 then restart the container and you are ready to test.
 
 General usage:
