@@ -7,18 +7,26 @@ Since synology has it's own implementation of CUPS, and it starts automatically 
 
 To stop CUPS:
 synoservice --hard-disable cupsd
+
 synoservice --hard-disable cups-lpd
+
 synoservicecfg --hard-disable cupsd
+
 synoservicecfg --hard-disable cups-lpd
+
 synoservicectl --stop cups-lpd
+
 synoservicectl --stop cupsd
 
 Also edit /usr/share/init/cups-service-handler.conf with root privilidge and make sure the 3 lines are commented out, otherwise you can never stop them on next boot.
 
 if [ ${PRINTER_NUM} -gt 0 ]; then
         #echo "Printer exist. Start cupsd and cups-lpd." || true
+
         #/usr/syno/sbin/synoservice --start cupsd || true
+
         #/usr/syno/sbin/synoservice --start cups-lpd || true
+
     fi
 
 
