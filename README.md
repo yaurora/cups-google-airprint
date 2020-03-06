@@ -6,29 +6,23 @@ Special notes for Synology users:
 Since synology has it's own implementation of CUPS, and it starts automatically with OS boot. It's necessary to disable it berfore we get started. Plus, system level "Bonjour Service discovery --> Printer sharing via Bonjour" must be enabled.
 
 To stop CUPS:
+```shell
 synoservice --hard-disable cupsd
-
 synoservice --hard-disable cups-lpd
-
 synoservicecfg --hard-disable cupsd
-
 synoservicecfg --hard-disable cups-lpd
-
 synoservicectl --stop cups-lpd
-
 synoservicectl --stop cupsd
+```
 
 Also edit /usr/share/init/cups-service-handler.conf with root privilidge and make sure the 3 lines are commented out, otherwise you can never stop them on next boot.
-
+```shell
 if [ ${PRINTER_NUM} -gt 0 ]; then
         #echo "Printer exist. Start cupsd and cups-lpd." || true
-
         #/usr/syno/sbin/synoservice --start cupsd || true
-
         #/usr/syno/sbin/synoservice --start cups-lpd || true
-
-    fi
-
+fi
+```
 
 Due to fw issues some user may not be able to use the cloud mode of "google cloud print (gcp)", so only local mode is enabled by default. However, this can be easily changed via config file.
 
