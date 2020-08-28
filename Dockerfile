@@ -19,6 +19,7 @@ RUN apt-get update -qy \
 	inotify-tools \
 	libcups2 \
 	libavahi-client3 \
+	libnss-mdns \
 	libsnmp30 \
 	hplip \
 	python-cups \
