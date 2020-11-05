@@ -1,7 +1,11 @@
 From phusion/baseimage:0.11
 MAINTAINER yaurora
 
-ENV HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" DEBIAN_FRONTEND="noninteractive" TERM="xterm"
+ENV HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" DEBIAN_FRONTEND="noninteractive" TERM="xterm" 
+ENV TZ $TZ
+ENV CUPS_USER_ADMIN admin
+ENV CUPS_USER_PASSWORD
+
 
 # Use baseimage-docker's init system
 CMD ["/sbin/my_init"]
@@ -34,7 +38,11 @@ COPY init.sh airprint-generate.py /tmp/
 RUN rm -rf /etc/service/sshd /etc/service/cron /etc/service/syslog-ng /etc/my_init.d/00_regen_ssh_host_keys.sh /var/lib/apt/lists/* /var/tmp/* || true \
 && mv -f /usr/lib/cups/backend/parallel /usr/lib/cups/backend-available/ || true \
 && mv -f /usr/lib/cups/backend/serial /usr/lib/cups/backend-available/ || true \
-&& chmod +x /tmp/init.sh && chmod +x /tmp/airprint-generate.py && /tmp/init.sh
+&& chmod +x /tmp/init.sh \
+&& chmod +x /tmp/airprint-generate.py \
+&& /tmp/init.sh \
+&& timedatectl set-timezone $TZ \
+&& useradd $CUPS_USER_ADMIN --system -G root,lpadmin --no-create-home --password $(mkpasswd $CUPS_USER_PASSWORD)
 
 # Export volumes
 VOLUME /config /etc/cups/ /var/log/cups /var/spool/cups /var/cache/cups
