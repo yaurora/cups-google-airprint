@@ -28,6 +28,7 @@ RUN apt-get update -qy \
 	hplip \
 	python-cups \
 	python \
+	systemd \
 	whois \	
 && apt-get -qq -y autoclean \
 && apt-get -qq -y autoremove \
