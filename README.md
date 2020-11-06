@@ -46,13 +46,14 @@ Other requirements Host networking (--net="host") appears to be needed for GCP a
 
 privileged (--privileged="true")
 
-An example startup command: docker run -d --name="airprint"
---net="host" --privileged="true"
--e TZ="Asia/Shanghai"
--e "CUPS_USER_ADMIN"="admin"
--e "CUPS_USER_PASSWORD"="admin"
--v /volume1/docker/airprint/config:/config
--v /dev/bus/usb:/dev/bus/usb
+An example startup command: 
+docker run -d --name="airprint" \
+--restart=always \
+-p 631:631 --privileged="true" \
+-e "CUPS_USER_ADMIN"="admin" \
+-e "CUPS_USER_PASSWORD"="admin" \
+-v /volume1/docker/airprint/config:/config \
+-v /dev/bus/usb:/dev/bus/usb \
 yaurora/cups-google-airprint
 
 
