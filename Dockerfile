@@ -41,9 +41,7 @@ RUN rm -rf /etc/service/sshd /etc/service/cron /etc/service/syslog-ng /etc/my_in
 && mv -f /usr/lib/cups/backend/serial /usr/lib/cups/backend-available/ || true \
 && chmod +x /tmp/init.sh \
 && chmod +x /tmp/airprint-generate.py \
-&& /tmp/init.sh \
-&& timedatectl set-timezone $TZ \
-&& useradd $CUPS_USER_ADMIN --system -G root,lpadmin --no-create-home --password $(mkpasswd $CUPS_USER_PASSWORD)
+&& /tmp/init.sh
 
 # Export volumes
 VOLUME /config /etc/cups/ /var/log/cups /var/spool/cups /var/cache/cups
