@@ -49,7 +49,7 @@ privileged (--privileged="true")
 An example startup command: 
 docker run -d --name="airprint" \
 --restart=always \
--p 631:631 --privileged="true" \
+--net=host --privileged="true" \
 -e "CUPS_USER_ADMIN"="admin" \
 -e "CUPS_USER_PASSWORD"="admin" \
 -v /volume1/docker/airprint/config:/config \
