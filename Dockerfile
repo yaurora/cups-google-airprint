@@ -2,7 +2,6 @@ From phusion/baseimage:0.11
 MAINTAINER yaurora
 
 ENV HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" DEBIAN_FRONTEND="noninteractive" TERM="xterm" 
-ENV TZ $TZ
 ENV CUPS_USER_ADMIN admin
 ENV CUPS_USER_PASSWORD password
 
