@@ -1,4 +1,4 @@
-From phusion/baseimage:master
+From phusion/baseimage:0.11
 MAINTAINER yaurora
 
 ENV HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" DEBIAN_FRONTEND="noninteractive" TERM="xterm" 
@@ -23,9 +23,9 @@ RUN apt-get update -qy \
 	libcups2 \
 	libavahi-client3 \
 	libnss-mdns \
-	libsnmp35 \
+	libsnmp30 \
 	hplip \
-	python3-cups \
+	python-cups \
 	python \
 	whois \	
 && apt-get -qq -y autoclean \
@@ -43,4 +43,4 @@ RUN rm -rf /etc/service/sshd /etc/service/cron /etc/service/syslog-ng /etc/my_in
 
 # Export volumes
 VOLUME /config /etc/cups/ /var/log/cups /var/spool/cups /var/cache/cups
-EXPOSE 631
+EXPOSE 631 5353
