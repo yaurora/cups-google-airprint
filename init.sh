@@ -27,7 +27,7 @@ if [ -n $CUPS_USER_ADMIN ]; then
     useradd $CUPS_USER_ADMIN --system -G root,lpadmin -M --password $(echo $CUPS_USER_PASSWORD |openssl passwd -1 -stdin)
   fi
 fi
-cupsctl --remote-admin --remote-any --share-printers
+#cupsctl --remote-admin --remote-any --share-printers
 #exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf
 exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf -s /config/cups/cups-files.conf
 EOT
