@@ -40,21 +40,35 @@ then restart the container and you are ready to test.
 
 General usage:
 
-Configure mappings: Type |Container |Client Path |/dev/bus/usb |/dev/bus/usb Path |/config |/path-in-your-container Port |631 |631 Variable |CUPS_USER_ADMIN |admin (or whatever you want - for logging in to CUPS) Variable |CUPS_USER_PASSWORD |pass (or whatever you want)
 
 Other requirements Host networking (--net="host") appears to be needed for GCP and Avahi to work. On synology NAS, ensure the cups service on Synology OS was disabled. Check the Synology documents for how to disable it. Otherwise, there will be conflicts between the OS and container.
 
 privileged (--privileged="true")
 
 An example startup command: 
+```shell
 docker run -d --name="airprint" \
 --restart=always \
 --net=host --privileged="true" \
--e "CUPS_USER_ADMIN"="admin" \
--e "CUPS_USER_PASSWORD"="admin" \
+-e CUPS_USER_ADMIN="admin" \
+-e CUPS_USER_PASSWORD="password" \
 -v /volume1/docker/airprint/config:/config \
 -v /dev/bus/usb:/dev/bus/usb \
-yaurora/cups-google-airprint
+yaurora/cups-google-airprint:latest
+```
+Or
 
+```shell
+docker run -d --name="airprint" \
+--restart=always \
+--net=bridge --privileged="true" \
+-p 631:631 \
+-p 5353:5353 \
+-e CUPS_USER_ADMIN="admin" \
+-e CUPS_USER_PASSWORD="password" \
+-v /volume1/docker/airprint/config:/config \
+-v /dev/bus/usb:/dev/bus/usb \
+yaurora/cups-google-airprint:latest
+```
 
 Project source: https://github.com/yaurora/cups-google-airprint
