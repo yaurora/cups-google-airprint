@@ -56,7 +56,7 @@ docker run -d --name="airprint" \
 -v /dev/bus/usb:/dev/bus/usb \
 yaurora/cups-google-airprint:latest
 ```
-Or
+Or if you don't want to use the host network and to expose mandatory ports (not tested), use:
 
 ```shell
 docker run -d --name="airprint" \
