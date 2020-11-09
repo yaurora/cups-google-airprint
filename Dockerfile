@@ -1,4 +1,4 @@
-From phusion/baseimage:0.11
+From phusion/baseimage:master
 MAINTAINER yaurora
 
 ENV HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" DEBIAN_FRONTEND="noninteractive" TERM="xterm" 
@@ -23,11 +23,10 @@ RUN apt-get update -qy \
 	libcups2 \
 	libavahi-client3 \
 	libnss-mdns \
-	libsnmp30 \
+	libsnmp35 \
 	hplip \
-	python-cups \
+	python3-cups \
 	python \
-	systemd \
 	whois \	
 && apt-get -qq -y autoclean \
 && apt-get -qq -y autoremove \
