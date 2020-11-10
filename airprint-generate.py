@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Copyright (c) 2010 Timothy J Fontaine <tjfontaine@atxconsulting.com>
@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
-import cups, os, optparse, re, urlparse
+import cups, os, optparse, re
+import urllib.parse as urlparse
 import os.path
-from StringIO import StringIO
+from io import StringIO
 
 from xml.dom.minidom import parseString
 from xml.dom import minidom
@@ -43,19 +44,20 @@ except:
             from elementtree import Element, ElementTree, tostring
             etree = None
         except:
-            raise 'Failed to find python libxml or elementtree, please install one of those or use python >= 2.5'
+            print('Failed to find python libxml or elementtree, please install one of those or use python >= 2.5')
+            raise
 
 XML_TEMPLATE = """<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>
 <name replace-wildcards="yes"></name>
 <service>
-	<type>_ipp._tcp</type>
-	<subtype>_universal._sub._ipp._tcp</subtype>
-	<port>631</port>
-	<txt-record>txtvers=1</txt-record>
-	<txt-record>qtotal=1</txt-record>
-	<txt-record>Transparent=T</txt-record>
-	<txt-record>URF=none</txt-record>
+        <type>_ipp._tcp</type>
+        <subtype>_universal._sub._ipp._tcp</subtype>
+        <port>631</port>
+        <txt-record>txtvers=1</txt-record>
+        <txt-record>qtotal=1</txt-record>
+        <txt-record>Transparent=T</txt-record>
+        <txt-record>URF=none</txt-record>
 </service>
 </service-group>"""
 
@@ -107,10 +109,10 @@ class AirPrintGenerate(object):
         self.directory = directory
         self.prefix = prefix
         self.adminurl = adminurl
-        
+
         if self.user:
             cups.setUser(self.user)
-    
+
     def generate(self):
         if not self.host:
             conn = cups.Connection()
@@ -118,10 +120,10 @@ class AirPrintGenerate(object):
             if not self.port:
                 self.port = 631
             conn = cups.Connection(self.host, self.port)
-            
+
         printers = conn.getPrinters()
-        
-        for p, v in printers.items():
+
+        for p, v in list(printers.items()):
             if v['printer-is-shared']:
                 attrs = conn.getPrinterAttributes(p)
                 uri = urlparse.urlparse(v['printer-uri-supported'])
@@ -148,17 +150,17 @@ class AirPrintGenerate(object):
                   rp = uri.path
                 else:
                   rp = uri[2]
-                
+
                 re_match = re.match(r'^//(.*):(\d+)(/.*)', rp)
                 if re_match:
                   rp = re_match.group(3)
-                
+
                 #Remove leading slashes from path
                 #TODO XXX FIXME I'm worried this will match broken urlparse
                 #results as well (for instance if they don't include a port)
                 #the xml would be malform'd either way
                 rp = re.sub(r'^/+', '', rp)
-                
+
                 path = Element('txt-record')
                 path.text = 'rp=%s' % (rp)
                 service.append(path)
@@ -212,12 +214,12 @@ class AirPrintGenerate(object):
                     admin = Element('txt-record')
                     admin.text = 'adminurl=%s' % (v['printer-uri-supported'])
                     service.append(admin)
-                
+
                 fname = '%s%s.service' % (self.prefix, p)
-                
+
                 if self.directory:
                     fname = os.path.join(self.directory, fname)
-                
+
                 f = open(fname, 'w')
 
                 if etree:
@@ -229,7 +231,7 @@ class AirPrintGenerate(object):
                     doc.insertBefore(dt, doc.documentElement)
                     doc.writexml(f)
                 f.close()
-                
+
                 if self.verbose:
                     sys.stderr.write('Created: %s%s' % (fname, os.linesep))
 
@@ -252,18 +254,18 @@ if __name__ == '__main__':
         default='AirPrint-')
     parser.add_option('-a', '--admin', action="store_true", dest="adminurl",
         help="Include the printer specified uri as the adminurl")
-    
+
     (options, args) = parser.parse_args()
-    
+
     # TODO XXX FIXME -- if cups login required, need to add
     # air=username,password
     from getpass import getpass
     cups.setPasswordCB(getpass)
-    
+
     if options.directory:
         if not os.path.exists(options.directory):
             os.mkdir(options.directory)
-    
+
     apg = AirPrintGenerate(
         user=options.username,
         host=options.hostname,
@@ -273,5 +275,5 @@ if __name__ == '__main__':
         prefix=options.prefix,
         adminurl=options.adminurl,
     )
-    
+
     apg.generate()
