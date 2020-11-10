@@ -26,10 +26,8 @@ import cups, os, optparse, re
 import urllib.parse as urlparse
 import os.path
 from io import StringIO
-
 from xml.dom.minidom import parseString
 from xml.dom import minidom
-
 import sys
 
 try:
