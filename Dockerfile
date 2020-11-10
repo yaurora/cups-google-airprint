@@ -1,7 +1,7 @@
-From phusion/baseimage:0.11
+From phusion/baseimage:master
 MAINTAINER yaurora
 
-ENV HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" DEBIAN_FRONTEND="noninteractive" TERM="xterm" 
+ENV HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" DEBIAN_FRONTEND="noninteractive" TERM="xterm"
 ENV CUPS_USER_ADMIN admin
 ENV CUPS_USER_PASSWORD password
 
@@ -12,22 +12,22 @@ CMD ["/sbin/my_init"]
 RUN apt-get update -qy \
 && apt-get upgrade -qy \
 && apt-get install --no-install-recommends -qy \
-	avahi-daemon \
-	avahi-utils \
-	bzr \
-	cups \
-	cups-pdf \
-	cups-filters \
-	google-cloud-print-connector \
-	inotify-tools \
-	libcups2 \
-	libavahi-client3 \
-	libnss-mdns \
-	libsnmp30 \
-	hplip \
-	python-cups \
-	python \
-	whois \	
+        avahi-daemon \
+        avahi-utils \
+        bzr \
+        cups \
+        cups-pdf \
+        cups-filters \
+        google-cloud-print-connector \
+        inotify-tools \
+        libcups2 \
+        libavahi-client3 \
+        libnss-mdns \
+        libsnmp35 \
+        hplip \
+        python3-cups \
+        python \
+        whois \
 && apt-get -qq -y autoclean \
 && apt-get -qq -y autoremove \
 && apt-get -qq -y clean
