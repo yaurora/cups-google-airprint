@@ -54,7 +54,7 @@ docker run -d --name="airprint" \
 -e CUPS_USER_PASSWORD="password" \
 -v /volume1/docker/airprint/config:/config \
 -v /dev/bus/usb:/dev/bus/usb \
-yaurora/cups-google-airprint:latest
+yaurora/cups-google-airprint:primary
 ```
 Or if you don't want to use the host network and to expose mandatory ports (not tested), use:
 
@@ -68,7 +68,7 @@ docker run -d --name="airprint" \
 -e CUPS_USER_PASSWORD="password" \
 -v /volume1/docker/airprint/config:/config \
 -v /dev/bus/usb:/dev/bus/usb \
-yaurora/cups-google-airprint:latest
+yaurora/cups-google-airprint:primary
 ```
 
 Project source: https://github.com/yaurora/cups-google-airprint
