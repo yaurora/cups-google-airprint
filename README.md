@@ -1,6 +1,6 @@
 cups-google-airprint
 cups with google cloud print and airprint enabled, with HP and many other printers supported. 
-Based on the phusion/baseimage version 0.11.
+Based on the phusion/baseimage:master branch.
 
 Special notes for Synology users:
 Since synology has it's own implementation of CUPS, and it starts automatically with OS boot. It's necessary to disable it berfore we get started. Plus, system level "Bonjour Service discovery --> Printer sharing via Bonjour" must be enabled.

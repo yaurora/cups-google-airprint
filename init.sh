@@ -1,14 +1,13 @@
 mkdir -p /etc/my_init.d
-#cp /tmp/init.sh /opt/
 cp /tmp/airprint-generate.py /opt/
-# include config files
+
 cat <<'EOT' >/etc/my_init.d/config.sh
 #!/bin/bash
 mkdir -p /config/cups /config/spool /config/logs /config/cache /config/cups/ssl /config/cups/ppd /config/gcp /config/avahi
 
 # Copy missing config files
 cd /etc/cups
-for f in *.conf ; do 
+for f in *.conf ; do
   if [ ! -f "/config/cups/${f}" ]; then
     cp ./${f} /config/cups/
   fi
@@ -23,16 +22,13 @@ cat <<'EOT' >/etc/service/cups/run
 #!/bin/sh
 if [ -n $CUPS_USER_ADMIN ]; then
   if [ $(grep -ci $CUPS_USER_ADMIN /etc/shadow) -eq 0 ]; then
-    #useradd $CUPS_USER_ADMIN --system -G root,lpadmin --no-create-home --password $(mkpasswd $CUPS_USER_PASSWORD)
-    useradd $CUPS_USER_ADMIN --system -G root,lpadmin -M --password $(echo $CUPS_USER_PASSWORD |openssl passwd -1 -stdin)
+    #useradd $CUPS_USER_ADMIN --system -G root,lpadmin -M --password $(echo $CUPS_USER_PASSWORD |openssl passwd -1 -stdin)
+    useradd -M -G root,lpadmin -p $(perl -e 'print crypt($ARGV[0], "password")' $CUPS_USER_PASSWORD) $CUPS_USER_ADMIN
   fi
 fi
-#cupsctl --remote-admin --remote-any --share-printers
-#exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf
 exec /usr/sbin/cupsd -f -c /config/cups/cupsd.conf -s /config/cups/cups-files.conf
 EOT
 chmod +x /etc/service/cups/run
-
 
 
 # Add AirPrint to runit
