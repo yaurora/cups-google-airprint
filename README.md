@@ -50,12 +50,14 @@ An example startup command:
 docker run -d --name="airprint" \
 --restart=always \
 --net=host --privileged="true" \
--e CUPS_USER_ADMIN="print" \
--e CUPS_USER_PASSWORD="password" \
+-e CUPS_USER_ADMIN=print \
+-e CUPS_USER_PASSWORD=password \
 -v /volume1/docker/airprint/config:/config \
 -v /dev/bus/usb:/dev/bus/usb \
 yaurora/cups-google-airprint:primary
 ```
+
+
 Or if you don't want to use the host network and to expose mandatory ports (not tested), use:
 
 ```shell
@@ -64,8 +66,8 @@ docker run -d --name="airprint" \
 --net=bridge --privileged="true" \
 -p 631:631 \
 -p 5353:5353 \
--e CUPS_USER_ADMIN="print" \
--e CUPS_USER_PASSWORD="password" \
+-e CUPS_USER_ADMIN=print \
+-e CUPS_USER_PASSWORD=password \
 -v /volume1/docker/airprint/config:/config \
 -v /dev/bus/usb:/dev/bus/usb \
 yaurora/cups-google-airprint:primary
