@@ -2,10 +2,10 @@ cups-google-airprint
 cups with google cloud print and airprint enabled, with HP and many other printers supported. 
 Based on the phusion/baseimage:master branch.
 
-#Deployment
+# Deployment
 
-##Deploy with Docker
-Special notes for Synology users:
+## Deploy with Docker
+**Special notes for Synology users:**
 Since synology has it's own implementation of CUPS, and it starts automatically with OS boot. It's necessary to disable it berfore we get started. Plus, system level "Bonjour Service discovery --> Printer sharing via Bonjour" must be enabled.
 
 To stop CUPS:
@@ -39,12 +39,9 @@ to
 ```json
 { "local_printing_enable": true, "cloud_printing_enable": true, "log_level": "INFO", "log_file_name": "/tmp/cloud-print-connector" }
 ```
-then restart the container and you are ready to test.
+then restart the container and you are ready to move on the next.
 
-General usage:
-
-
-Other requirements Host networking (--net="host") appears to be needed for GCP and Avahi to work. On synology NAS, ensure the cups service on Synology OS was disabled. Check the Synology documents for how to disable it. Otherwise, there will be conflicts between the OS and container.
+Other requirement - Host networking (--net="host") appears to be needed for GCP and Avahi to work. On synology NAS, ensure the cups service on Synology OS was disabled. Check the Synology documents for how to disable it. Otherwise, there will be conflicts between the OS and container.
 
 privileged (--privileged="true")
 
@@ -76,7 +73,7 @@ docker run -d --name="airprint" \
 yaurora/cups-google-airprint:primary
 ```
 
-##Deploy directly
+## Deploy directly
 ansible-playbook install_cups.yml 
 
 Project source: https://github.com/yaurora/cups-google-airprint
