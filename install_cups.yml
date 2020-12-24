@@ -1,0 +1,139 @@
+- name: Airprint/Google Cloud Print installation
+  hosts: all
+  gather_facts: yes
+  tasks:
+
+#    - name: Add repository and remove other repositories
+#      apt_repository:
+#        repo: {{ item }}
+#        state: present
+#        update_cache: yes
+#      - with_items:
+#        - deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+#        - deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+#        - deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+#        - deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+#        - deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+#        - deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+#        - deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+#        - deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+#        - deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+#        - deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+
+
+    - name: Install packages
+      apt:
+        name:
+          - avahi-daemon
+          - avahi-utils
+          - cups
+          - google-cloud-print-connector
+          - inotify-tools
+          - libcups2
+          - libnss-mdns
+          - hplip
+          - python3-cups
+        state: present
+        update_cache: yes
+        install_recommends: no
+        allow_unauthenticated: yes
+
+    - name: Create Systemd Unit file for airprint
+      copy:
+        content: |
+          [Unit]
+          Description=Airprint Service
+          Documentation=https://localhost:631
+          Wants=cups.service avahi-daemon.service network-online.target
+          After=cups.service avahi-daemon.service network-online.target
+
+          [Install]
+          WantedBy=multi-user.target
+
+          [Service]
+          Type=simple
+          KillMode=control-group
+          User=avahi
+          TimeoutStartSec=0
+          Restart=on-failure
+          RestartSec=5s
+          ExecStart=/usr/local/bin/airprint
+          ExecReload=/sbin/killall5 inotifywait && /usr/local/bin/airprint
+          ExecStop=/usr/bin/killall inotifywait
+        dest: /lib/systemd/system/airprint.service
+
+    - name: Create directory for Google Cloud Print
+      file:
+        path: /etc/cloud-print-connector
+        state: directory
+        recurse: yes
+
+    - name: Initialize config file for Google Cloud Print Connector
+      shell:
+        cmd: gcp-connector-util init --local-printing-enable --cloud-printing-enable=false
+        chdir: /etc/cloud-print-connector
+
+    - name: Allow Remote Admin UI for CUPS
+      shell:
+        cmd: cupsctl --remote-admin --remote-any --share-printers
+
+    - name: Create Systemd Unit file for Google Cloud Print Connector
+      copy:
+        content: |
+          # Copyright 2016 Google Inc. All rights reserved.
+          #
+          # Use of this source code is governed by a BSD-style
+          # license that can be found in the LICENSE file or at
+          # https://developers.google.com/open-source/licenses/bsd
+
+          [Unit]
+          Description=Google Cloud Print Connector
+          Documentation="https://github.com/google/cloud-print-connector"
+          After=cups.service avahi-daemon.service network-online.target
+          Wants=cups.service avahi-daemon.service network-online.target
+
+          [Service]
+          ExecStart=/usr/bin/gcp-cups-connector -config-filename /opt/cloud-print-connector/gcp-cups-connector.config.json
+          Restart=on-failure
+          #User=cloud-print-connector
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /lib/systemd/system/cloud-print-connector.service
+
+    - name: Download Airprint binaries
+      copy:
+        content: |
+          #!/bin/bash
+          /usr/bin/inotifywait -m /etc/cups/ppd/ -e create -e moved_to -e close_write |
+          while read path action file; do
+               logger -s "Printer ${file} changed, reloading avahi services."
+               /usr/local/bin/airprint-generate.py -d /etc/avahi/services
+          done
+        dest: /usr/local/bin/airprint
+        mode: u+rx,g+rx,o+rwx
+
+
+    - name: Download Airprint Generator
+      get_url:
+        url: https://github.com/yaurora/cups-google-airprint/releases/download/airprint-generator/airprint-generate.py
+        dest: /usr/local/bin/airprint-generate.py
+        checksum: sha256:ECC664E3EF1198111EB20C44F870448BFB8B034A0B9F54669A66F6FB260A9370
+        mode: u+rx,g+rx,o+rwx
+
+    - name: Give avahi permissions to service files
+      file:
+        path: /etc/avahi/services
+        owner: avahi
+        group: avahi
+
+    - name: Reload systemd
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: "{{ item }}"
+      with_items:
+        - cups
+        - airprint
+        - cloud-print-connector
+        - avahi-daemon
