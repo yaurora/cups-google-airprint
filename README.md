@@ -15,7 +15,7 @@ synoservicectl --stop cups-lpd
 synoservicectl --stop cupsd
 ```
 
-Also edit /usr/share/init/cups-service-handler.conf with root privilidge and make sure the 3 lines are commented out, otherwise you can never stop them on next boot.
+Also edit /usr/share/init/cups-service-handler.conf with root privilidge and make sure the 3 lines are commented out, otherwise you cannot really stop CUPS from start once printer is reconnected.
 ```shell
 if [ ${PRINTER_NUM} -gt 0 ]; then
         #echo "Printer exist. Start cupsd and cups-lpd." || true
@@ -24,7 +24,7 @@ if [ ${PRINTER_NUM} -gt 0 ]; then
 fi
 ```
 
-Due to fw issues some user may not be able to use the cloud mode of "google cloud print (gcp)", so only local mode is enabled by default. However, this can be easily changed via config file.
+Due to FW issues some users may not be able to use the cloud mode of "google cloud print (gcp)", so only local mode is enabled by default. However, this can be easily changed via config file.
 
 Default configuration file for gcp is generated in /config/gcp/gcp-cups-connector.config.json. If you exposed a local folder to config folder to the container, for instance in my case, /volume1/docker/airprint/config, then the file is located in /volume1/docker/airprint/config/gcp/gcp-cups-connector.config.json.
 
