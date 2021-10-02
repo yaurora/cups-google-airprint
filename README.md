@@ -6,7 +6,7 @@ Based on the phusion/baseimage:master branch.
 
 ## Deploy with Docker
 **Special notes for Synology users:**
-Since synology has it's own implementation of CUPS, and it starts automatically with OS boot. It's necessary to disable it berfore we get started. Plus, system level "Bonjour Service discovery --> Printer sharing via Bonjour" must be enabled.
+Since synology has it's own implementation of CUPS, and it starts automatically with OS boot. It's necessary to disable it berfore we get started or you can try other port other than 631 to avoid port conflicts. Plus, system level "Bonjour Service discovery --> Printer sharing via Bonjour" must be enabled.
 
 To stop CUPS:
 ```shell
@@ -64,7 +64,7 @@ Or if you don't want to use the host network and to expose mandatory ports (not 
 docker run -d --name="airprint" \
 --restart=always \
 --net=bridge --privileged="true" \
--p 631:631 \
+-p 631:631 \ # you can try other ports but I didn't test it
 -p 5353:5353 \
 -e CUPS_USER_ADMIN=print \
 -e CUPS_USER_PASSWORD=password \
