@@ -23,7 +23,8 @@ cat <<'EOT' >/etc/service/cups/run
 if [ -n $CUPS_USER_ADMIN ]; then
   if [ $(grep -ci $CUPS_USER_ADMIN /etc/shadow) -eq 0 ]; then
     useradd $CUPS_USER_ADMIN -G root,lpadmin -M --password $(openssl passwd -1 $CUPS_USER_PASSWORD)
-    #useradd -M -G root,lpadmin -p $(perl -e 'print crypt($ARGV[0], "password")' $CUPS_USER_PASSWORD) $CUPS_USER_ADMIN
+    #Or even better, encrypt the pass with salt
+    #useradd $CUPS_USER_ADMIN -G root,lpadmin -M --password $(openssl passwd -1 -salt $(openssl rand -hex 8) $CUPS_USER_PASSWORD)
 
   fi
 fi
