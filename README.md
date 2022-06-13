@@ -1,14 +1,14 @@
 cups-google-airprint
-cups with google cloud print and airprint enabled, with HP and many other printers supported. 
-Based on the phusion/baseimage:master branch.
+cups with google cloud print support, with HP and many other printers drivers supported. 
+Base image is phusion/baseimage:master branch.
 
 # Deployment
 
 ## Deploy with Docker
 **Special notes for Synology users:**
-Since synology has it's own implementation of CUPS, and it starts automatically with OS boot. It's necessary to disable it berfore we get started or you can try other port other than 631 to avoid port conflicts. Plus, system level "Bonjour Service discovery --> Printer sharing via Bonjour" must be enabled.
+Since synology has it's own implementation of CUPS, which starts automatically with OS boot. It's necessary to disable it berfore we get started, or you can try other port than 631 to avoid port conflicts. Plus, system level "Bonjour Service discovery --> Printer sharing via Bonjour" must be enabled.
 
-To stop CUPS:
+### To stop CUPS:
 ```shell
 synoservice --hard-disable cupsd
 synoservice --hard-disable cups-lpd
@@ -18,7 +18,7 @@ synoservicectl --stop cups-lpd
 synoservicectl --stop cupsd
 ```
 
-Also edit /usr/share/init/cups-service-handler.conf with root privilidge and make sure the 3 lines are commented out, otherwise you can never stop them on next boot.
+### Also edit /usr/share/init/cups-service-handler.conf with root privilidge and make sure below 3 lines are commented out, otherwise you can never stop them since they will always start themselves once a printer is detected.
 ```shell
 if [ ${PRINTER_NUM} -gt 0 ]; then
         #echo "Printer exist. Start cupsd and cups-lpd." || true
@@ -27,9 +27,8 @@ if [ ${PRINTER_NUM} -gt 0 ]; then
 fi
 ```
 
-Due to fw issues some user may not be able to use the cloud mode of "google cloud print (gcp)", so only local mode is enabled by default. However, this can be easily changed via config file.
+### Due to fw issues some users may not be able to use the cloud mode of "google cloud print (gcp)", so only local mode is enabled by default. However, this can be easily changed via config file.
 
-Default configuration file for gcp is generated in /config/gcp/gcp-cups-connector.config.json. If you exposed a local folder to config folder to the container, for instance in my case, /volume1/docker/airprint/config, then the file is located in /volume1/docker/airprint/config/gcp/gcp-cups-connector.config.json.
 
 Just change it from:
 ```json
@@ -41,11 +40,16 @@ to
 ```
 then restart the container and you are ready to move on the next.
 
-Other requirement - Host networking (--net="host") appears to be needed for GCP and Avahi to work. On synology NAS, ensure the cups service on Synology OS was disabled. Check the Synology documents for how to disable it. Otherwise, there will be conflicts between the OS and container.
+### Other requirement
+#### Host networking (--net="host") appears to be needed for GCP and Avahi to work. On synology NAS, ensure the cups service on Synology OS was disabled. Check the Synology documents for how to disable it. Otherwise, there will be conflicts between the OS and container.
 
-privileged (--privileged="true")
+#### privileged (--privileged="true")
 
-An example startup command: 
+#### Data persistence
+Default configuration file for gcp is generated in /config/gcp/gcp-cups-connector.config.json. So if you need the config to be persistent, remember to map this folder to some persistent storage.
+CUPS uses the /config folder to store it's configuration files.
+
+### A quick startup command: 
 ```shell
 docker run -d --name="airprint" \
 --restart=always \
@@ -58,7 +62,7 @@ yaurora/cups-google-airprint:primary
 ```
 
 
-Or if you don't want to use the host network and to expose mandatory ports (not tested), use:
+### Or if you don't want to use the host network and to expose mandatory ports (not tested), use:
 
 ```shell
 docker run -d --name="airprint" \
@@ -73,7 +77,7 @@ docker run -d --name="airprint" \
 yaurora/cups-google-airprint:primary
 ```
 
-## Deploy directly
+## Deploy with Ansible
 ansible-playbook install_cups.yml 
 
 Project source: https://github.com/yaurora/cups-google-airprint
