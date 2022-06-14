@@ -60,4 +60,4 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           # tags: ${{ steps.generate_meta.outputs.tags }}
           tags: latest
-          labels: ${{ steps.generate_meta.outputs.labels }}
+          # labels: ${{ steps.generate_meta.outputs.labels }}
