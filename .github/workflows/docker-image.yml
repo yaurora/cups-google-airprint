@@ -28,7 +28,7 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Docker meta
-      id: <meta_id>
+      id: <1.0>
       uses: docker/metadata-action@v3
       with:
           # list of Docker images to use as base name for tags
