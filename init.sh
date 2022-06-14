@@ -33,7 +33,7 @@ EOT
 chmod +x /etc/service/cups/run
 
 
-# Add AirPrint to runit
+# Add airprint to runit
 mkdir -p /etc/service/airprint
 cat <<'EOT' > /etc/service/airprint/run
 #!/bin/bash
