@@ -1,6 +1,6 @@
 # cups-google-airprint
-cups with google cloud print support, with HP and many other printers drivers supported. 
-Base image is phusion/baseimage:master branch.
+CUPS with Google Cloud Print support, supports HP and many other printers. 
+Docker image is based on phusion/baseimage:master branch.
 
 # Deployment
 
