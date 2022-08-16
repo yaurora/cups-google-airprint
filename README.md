@@ -58,7 +58,7 @@ docker run -d --name="airprint" \
 -e CUPS_USER_PASSWORD=password \
 -v /volume1/docker/airprint/config:/config \
 -v /dev/bus/usb:/dev/bus/usb \
-yaurora/cups-google-airprint:primary
+yaurora/cups-google-airprint:latest
 ```
 
 
@@ -74,7 +74,7 @@ docker run -d --name="airprint" \
 -e CUPS_USER_PASSWORD=password \
 -v /volume1/docker/airprint/config:/config \
 -v /dev/bus/usb:/dev/bus/usb \
-yaurora/cups-google-airprint:primary
+yaurora/cups-google-airprint:latest
 ```
 
 ## Deploy with Ansible
