@@ -25,6 +25,10 @@ RUN apt-get update -qy \
         libnss-mdns \
         libsnmp35 \
         hplip \
+        lsb-core \
+        lsb \
+        printer-driver-escpr \
+        printer-driver-fujixerox \
         python3-cups \
         python \
         whois \
