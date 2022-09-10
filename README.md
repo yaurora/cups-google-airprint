@@ -6,7 +6,7 @@ Docker image is based on phusion/baseimage:master branch.
 
 ## Deploy with Docker
 
-**Special notes for Synology users: NOT WORKING ON DSM 7.x**
+### **Special notes for Synology users: NOT WORKING ON DSM 7.x**
 Since synology has it's own implementation of CUPS, which starts automatically with OS boot. It's necessary to disable it berfore we get started, or you can try other port than 631 to avoid port conflicts. Plus, system level "Bonjour Service discovery --> Printer sharing via Bonjour" must be enabled.
 
 ### To stop CUPS:
